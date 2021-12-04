@@ -4,6 +4,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { Button, Stack } from '@mui/material';
 import Addcar from './Addcar';
+import Editcar from './Editcar';
 
 export default function Carlist() {
     const [cars, setCars] = useState([]);
@@ -35,21 +36,36 @@ export default function Carlist() {
         })
         .then(res => fetchData())
         .catch(error => console.error(error))
-        
+    }
+
+    const updateCar = (car, url) => {
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(car)
+        })
+        .then(res => fetchData())
+        .catch(error => console.error(error))
     }
 
     const columns = [
-        {headerName: "Brand", field:"brand", sortable: true, filter: true},
-        {headerName: "Model", field:"model", sortable: true, filter: true},
-        {headerName: "Color", field:"color", sortable: true, filter: true},
-        {headerName: "Fuel", field:"fuel", sortable: true, filter: true},
-        {headerName: "Year", field:"year", sortable: true, filter: true},
-        {headerName: "Price", field:"price", sortable: true, filter: true},
-        {headerName: "Delete", field: "_links.self.href", sortable: false, filter: false, 
+        {headerName: "Brand", field:"brand", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Model", field:"model", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Color", field:"color", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Fuel", field:"fuel", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Year", field:"year", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Price", field:"price", sortable: true, filter: true, resizable: true, width:150},
+        {headerName: "Edit", field: "_links.self.href", sortable: false, filter: false, width:130, 
+        cellRendererFramework: params => {
+            return (<Editcar updateCar={updateCar} car={params.data} />)}
+        },
+        {headerName: "Delete", field: "_links.self.href", sortable: false, filter: false, width:130, 
         cellRendererFramework: params => {
             const url = params.value;
-            return (<Button size="small" variant="contained" color="error" onClick={() => deleteCar(url)}>Delete</Button>)
-        }}
+            return (<Button size="small" color="error" onClick={() => deleteCar(url)}>Delete</Button>)}
+        }
     ]
 
     return (
