@@ -16,12 +16,26 @@ export default function Carlist() {
         fetch('https://carstockrest.herokuapp.com/cars')
         .then(response => response.json())
         .then(data => setCars(data._embedded.cars))
+        .catch(error => console.error(error))
     }
 
     const deleteCar = (url) => {
-        fetch(url, {method: 'Delete'})
-        .then(result => fetchData())
+        fetch(url, {method: 'DELETE'})
+        .then(res => fetchData())
         .catch(error => console.error(error))
+    }
+
+    const saveCar = (car) => {
+        fetch('https://carstockrest.herokuapp.com/cars', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(car)
+        })
+        .then(res => fetchData())
+        .catch(error => console.error(error))
+        
     }
 
     const columns = [
@@ -41,7 +55,7 @@ export default function Carlist() {
     return (
         <div className="ag-theme-material"style={{height:'700px',width:'100%',margin:'auto'}}>
             <Stack direction="row">
-                <Addcar />
+                <Addcar saveCar={saveCar}/>
             </Stack>
             <AgGridReact
                 ref={gridRef}

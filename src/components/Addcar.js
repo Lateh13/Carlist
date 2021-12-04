@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 
-export default function Addcar() {
+export default function Addcar(props) {
     const [open, setOpen] = React.useState(false);
     const [car, setCar] = React.useState({
         brand: '', model: '', color: '', fuel: '', year: '', price: ''
@@ -16,7 +16,12 @@ export default function Addcar() {
     }
 
     const handleInputChange = (event) => {
-        setCar({...car, [event.target.name]: event.target.value})
+        setCar({...car, [event.target.name]: event.target.value});
+    }
+
+    const addCar = () => {
+        props.saveCar(car);
+        handleClose();
     }
 
     return (
@@ -77,7 +82,7 @@ export default function Addcar() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleClose} color="primary">Save</Button>
+                    <Button onClick={addCar} color="primary">Save</Button>
                 </DialogActions>
             </Dialog>
         </div>
